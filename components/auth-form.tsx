@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Lock, Phone, CheckCircle, MessageSquare, ArrowLeft } from 'lucide-react';
+import { Lock, Phone, CheckCircle, MessageSquare, ArrowLeft, TrendingUp } from 'lucide-react';
 
 export function AuthForm() {
   const router = useRouter();
@@ -67,8 +67,6 @@ export function AuthForm() {
         return;
       }
 
-      console.log('[v0] Sending SMS request for:', phoneNumber);
-
       const response = await fetch('/api/auth/sms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,7 +74,6 @@ export function AuthForm() {
       });
 
       const data = await response.json();
-      console.log('[v0] SMS API response:', data);
 
       if (!response.ok || !data.success) {
         setError(data.error || 'Erreur lors de l\'envoi du SMS');
@@ -84,15 +81,9 @@ export function AuthForm() {
         return;
       }
 
-      // If in development, show the debug code
-      if (data.debugCode) {
-        console.log('[v0] Debug verification code:', data.debugCode);
-      }
-      
       setSmsSent(true);
       setStep('pin');
-    } catch (err) {
-      console.error('[v0] SMS send error:', err);
+    } catch {
       setError('Erreur de connexion. Verifiez votre connexion internet.');
     } finally {
       setIsLoading(false);
@@ -111,8 +102,6 @@ export function AuthForm() {
         return;
       }
 
-      console.log('[v0] Verifying PIN for:', phoneNumber);
-
       // First verify the SMS code
       const verifyResponse = await fetch('/api/auth/sms', {
         method: 'PUT',
@@ -121,7 +110,6 @@ export function AuthForm() {
       });
 
       const verifyData = await verifyResponse.json();
-      console.log('[v0] Verify response:', verifyData);
 
       if (!verifyResponse.ok || !verifyData.success) {
         setError(verifyData.error || 'Code de verification invalide');
@@ -141,7 +129,6 @@ export function AuthForm() {
       });
 
       const sessionData = await sessionResponse.json();
-      console.log('[v0] Session response:', sessionData);
 
       if (!sessionResponse.ok) {
         setError(sessionData.error || 'Erreur lors de la creation de session');
@@ -156,12 +143,21 @@ export function AuthForm() {
       }));
 
       router.push('/dashboard');
-    } catch (err) {
-      console.error('[v0] Authentication error:', err);
+    } catch {
       setError('Erreur de connexion. Verifiez votre connexion internet.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSkipTradeRepublic = () => {
+    // Allow access to Binance data without Trade Republic connection
+    localStorage.setItem('tradeSession', JSON.stringify({
+      phoneNumber: 'guest',
+      timestamp: new Date().toISOString(),
+      guestMode: true,
+    }));
+    router.push('/dashboard');
   };
 
   const handleResumeSession = async () => {
@@ -199,7 +195,7 @@ export function AuthForm() {
             </div>
             <h1 className="text-2xl font-bold text-foreground">TradeFlow</h1>
             <p className="text-sm text-muted-foreground">
-              Connectez-vous à votre compte
+              Connectez-vous a votre compte
             </p>
           </div>
 
@@ -332,10 +328,19 @@ export function AuthForm() {
             </div>
           )}
 
-          {!existingSession && step === 'phone' && (
-            <div className="pt-4 border-t border-border">
+          {step === 'phone' && (
+            <div className="pt-4 border-t border-border space-y-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleSkipTradeRepublic}
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Continuer sans Trade Republic
+              </Button>
               <p className="text-xs text-center text-muted-foreground">
-                Les sessions sont sauvegardees 30 jours pour eviter les SMS repetes
+                Acces aux donnees Binance uniquement (XAU, XAG, EUR)
               </p>
             </div>
           )}
