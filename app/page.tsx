@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { ArrowRight, TrendingUp, BarChart3, Zap } from "lucide-react";
 
 export default function Home() {
@@ -17,9 +18,11 @@ export default function Home() {
             <Button variant="ghost" className="text-foreground hover:bg-secondary">
               Documentation
             </Button>
-            <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-              Get Started
-            </Button>
+            <Link href="/auth">
+              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -43,9 +46,11 @@ export default function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
-                Start Trading <ArrowRight className="w-4 h-4" />
-              </Button>
+              <Link href="/auth">
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 gap-2">
+                  Start Trading <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
               <Button size="lg" variant="outline" className="border-border hover:bg-secondary">
                 View API Docs
               </Button>
@@ -153,9 +158,11 @@ export default function Home() {
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
             Join thousands of traders using TradeFlow to manage their portfolios and make smarter decisions.
           </p>
-          <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-            Get Started Now
-          </Button>
+          <Link href="/auth">
+            <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+              Get Started Now
+            </Button>
+          </Link>
         </div>
       </section>
 
