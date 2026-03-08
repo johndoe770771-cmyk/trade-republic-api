@@ -55,7 +55,7 @@ export function AuthForm() {
 
     try {
       if (!phoneNumber || !pin) {
-        setError('Please enter both phone number and PIN');
+        setError('Veuillez entrer le numéro de téléphone et le code PIN');
         return;
       }
 
@@ -71,7 +71,7 @@ export function AuthForm() {
       });
 
       if (!response.ok) {
-        throw new Error('Session creation failed');
+        throw new Error('Création de session échouée');
       }
 
       // Store session locally
@@ -82,7 +82,7 @@ export function AuthForm() {
 
       router.push('/dashboard');
     } catch (err) {
-      setError('Authentication failed. Please try again.');
+      setError('Erreur d\'authentification. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
     }
@@ -100,12 +100,12 @@ export function AuthForm() {
       if (response.ok) {
         router.push('/dashboard');
       } else {
-        setError('Session expired. Please log in again.');
+        setError('Session expirée. Veuillez vous reconnecter.');
         setExistingSession(null);
         localStorage.removeItem('tradeSession');
       }
     } catch (error) {
-      setError('Failed to resume session.');
+      setError('Impossible de reprendre la session.');
     } finally {
       setIsLoading(false);
     }
@@ -123,13 +123,13 @@ export function AuthForm() {
             </div>
             <h1 className="text-2xl font-bold text-foreground">TradeFlow</h1>
             <p className="text-sm text-muted-foreground">
-              Sign in to your account
+              Connectez-vous à votre compte
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">Phone Number</label>
+              <label className="text-sm font-medium text-foreground">Numéro de téléphone</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -144,7 +144,7 @@ export function AuthForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">PIN</label>
+              <label className="text-sm font-medium text-foreground">Code PIN</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
@@ -169,7 +169,7 @@ export function AuthForm() {
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               disabled={isLoading}
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Connexion en cours...' : 'Se connecter'}
             </Button>
           </form>
 
@@ -178,9 +178,9 @@ export function AuthForm() {
               <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
                 <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
                 <div className="text-sm">
-                  <p className="font-medium text-foreground">Session Found</p>
+                  <p className="font-medium text-foreground">Session trouvée</p>
                   <p className="text-xs text-muted-foreground">
-                    {existingSession.phone} • Last used {existingSession.lastUsed}
+                    {existingSession.phone} • Utilisée le {existingSession.lastUsed}
                   </p>
                 </div>
               </div>
@@ -191,10 +191,10 @@ export function AuthForm() {
                 variant="outline"
                 className="w-full"
               >
-                Resume Session
+                Reprendre la session
               </Button>
               <p className="text-xs text-center text-muted-foreground">
-                Or enter different credentials below
+                Ou entrez d'autres identifiants ci-dessous
               </p>
             </div>
           )}
@@ -202,7 +202,7 @@ export function AuthForm() {
           {!existingSession && (
             <div className="pt-4 border-t border-border">
               <p className="text-xs text-center text-muted-foreground">
-                Sessions are saved locally to prevent repeated SMS requests
+                Les sessions sont sauvegardées 30 jours pour éviter les SMS répétés
               </p>
             </div>
           )}

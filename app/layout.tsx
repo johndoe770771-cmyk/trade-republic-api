@@ -7,9 +7,9 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'TradeFlow - Platform de Trading ISIN',
+  description: 'Trading en temps réel des ISIN avec prix Bid/Ask/Last',
+  generator: 'TradeFlow',
   icons: {
     icon: [
       {
@@ -27,6 +27,10 @@ export const metadata: Metadata = {
     ],
     apple: '/apple-icon.png',
   },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
 }
 
 export default function RootLayout({
@@ -35,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body className="font-sans antialiased">
         {children}
         <Analytics />

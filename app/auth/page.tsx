@@ -1,8 +1,8 @@
 import { AuthForm } from '@/components/auth-form';
 
 export const metadata = {
-  title: 'Sign In - TradeFlow',
-  description: 'Sign in to your TradeFlow trading account',
+  title: 'Connexion - TradeFlow',
+  description: 'Connectez-vous à votre compte TradeFlow',
 };
 
 export default function AuthPage() {

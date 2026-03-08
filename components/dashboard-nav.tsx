@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BarChart3, LogOut, Settings, TrendingUp } from 'lucide-react';
+import { BarChart3, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 export function DashboardNav() {
@@ -13,12 +13,11 @@ export function DashboardNav() {
 
   const handleLogout = () => {
     localStorage.removeItem('tradeSession');
-    router.push('/');
+    router.push('/auth');
   };
 
   const navItems = [
-    { href: '/dashboard', label: 'Portfolio', icon: BarChart3 },
-    { href: '/dashboard/market', label: 'Market', icon: TrendingUp },
+    { href: '/dashboard', label: 'Trading ISIN', icon: BarChart3 },
   ];
 
   return (
@@ -53,27 +52,15 @@ export function DashboardNav() {
             })}
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link href="/dashboard/settings">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground"
-                title="Settings"
-              >
-                <Settings className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleLogout}
-              className="text-muted-foreground hover:text-foreground"
-              title="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={handleLogout}
+            className="text-muted-foreground hover:text-foreground"
+            title="Déconnexion"
+          >
+            <LogOut className="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </nav>
