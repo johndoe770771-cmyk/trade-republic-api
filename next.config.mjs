@@ -7,7 +7,6 @@ const nextConfig = {
     unoptimized: true,
   },
   reactStrictMode: true,
-  swcMinify: true,
   compress: true,
   poweredByHeader: false,
   // Enable Turbopack for faster builds

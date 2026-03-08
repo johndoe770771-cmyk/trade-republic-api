@@ -3,7 +3,6 @@
 
 import type { TradeRepublicApi } from '../trade-republic-api/src/api';
 import type { Portfolio, Position } from '../trade-republic-api/src/portfolio';
-import type { MarketSnapshot } from './binance';
 
 /**
  * Initialize Trade Republic API
