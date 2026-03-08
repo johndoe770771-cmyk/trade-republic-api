@@ -14,7 +14,6 @@ export function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [existingSession, setExistingSession] = useState<{ phone: string; lastUsed: string } | null>(null);
-  const [showExistingSession, setShowExistingSession] = useState(false);
 
   // Load existing session on mount
   useEffect(() => {
@@ -27,20 +26,20 @@ export function AuthForm() {
       const stored = localStorage.getItem('tradeSession');
       if (stored) {
         const session = JSON.parse(stored);
-        setPhoneNumber(session.phoneNumber);
+        const storedPhone = session.phoneNumber;
+        
+        setPhoneNumber(storedPhone);
         setExistingSession({
-          phone: session.phoneNumber,
+          phone: storedPhone,
           lastUsed: new Date(session.timestamp).toLocaleDateString(),
         });
-      }
 
-      // Also check backend for persistent session
-      const params = new URLSearchParams({ phone: phoneNumber });
-      const response = await fetch(`/api/auth/session?${params}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.session) {
-          setShowExistingSession(true);
+        // Check backend for persistent session using stored phone
+        if (storedPhone) {
+          const params = new URLSearchParams({ phone: storedPhone });
+          const response = await fetch(`/api/auth/session?${params}`);
+          // Session exists on backend, no additional action needed
+          // The existingSession state is already set from localStorage
         }
       }
     } catch (error) {

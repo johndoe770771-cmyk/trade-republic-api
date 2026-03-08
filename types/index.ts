@@ -1,5 +1,8 @@
 // Global type definitions for TradeFlow
 
+// Re-export Binance types for convenience
+export type { MarketSnapshot, MarketPair, BinancePrice } from '@/lib/binance-service';
+
 /**
  * Application configuration
  */

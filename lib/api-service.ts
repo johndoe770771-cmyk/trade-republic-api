@@ -179,34 +179,14 @@ export async function disconnectAPI(api: TradeRepublicApi | null): Promise<void>
   }
 }
 
-/**
- * Fetch Binance market snapshot (XAU/USD, XAG/USD, EUR/USD)
- */
-export async function getMarketSnapshot(): Promise<MarketSnapshot | null> {
-  try {
-    const response = await fetch('/api/market/snapshot', {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch market snapshot: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data || null;
-  } catch (error) {
-    console.error('[API Service] Failed to fetch market snapshot:', error);
-    return null;
-  }
-}
-
-/**
- * Format Binance price
- */
-export function formatBinancePrice(price: number | null, decimals = 2): string {
-  if (price == null) return '—';
-  return price.toFixed(decimals);
-}
+// Re-export Binance service utilities for convenience
+export { 
+  getMarketSnapshot, 
+  formatPrice as formatBinancePrice, 
+  formatTimestamp,
+  type MarketSnapshot,
+  type MarketPair 
+} from './binance-service';
 
 /**
  * Get price change indicator

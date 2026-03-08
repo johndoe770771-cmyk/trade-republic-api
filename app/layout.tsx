@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'TradeFlow - Platform de Trading ISIN',
-  description: 'Trading en temps réel des ISIN avec prix Bid/Ask/Last',
+  title: 'TradeFlow - Platform de Trading ISIN & Binance',
+  description: 'Trading en temps reel des ISIN avec prix Bid/Ask/Last et donnees de marche Binance (XAU, XAG, EUR)',
   generator: 'TradeFlow',
   icons: {
     icon: [
@@ -26,10 +26,6 @@ export const metadata: Metadata = {
       },
     ],
     apple: '/apple-icon.png',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
   },
 }
 

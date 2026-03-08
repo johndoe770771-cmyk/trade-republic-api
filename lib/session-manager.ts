@@ -1,10 +1,7 @@
-import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
-
 /**
- * Session Manager - Persist Trade Republic sessions locally
- * Prevents repeated SMS/PIN requests by storing encrypted session tokens
+ * Session Manager - Manage Trade Republic sessions
+ * Uses in-memory storage for serverless compatibility
+ * In production, this should be backed by a database or Redis
  */
 
 export interface TradeRepublicSession {
@@ -22,131 +19,44 @@ export interface TradeRepublicSession {
   };
 }
 
-const SESSIONS_DIR = path.join(process.cwd(), '.tr-sessions');
-const ENCRYPTION_KEY = process.env.TR_SESSION_KEY || 'default-key-change-in-prod';
+// In-memory session storage (for demo purposes)
+// In production, replace with Redis or database storage
+const sessions = new Map<string, TradeRepublicSession>();
 
 class SessionManager {
-  private sessions: Map<string, TradeRepublicSession> = new Map();
-
-  constructor() {
-    this.initializeSessionsDirectory();
-    this.loadSessions();
-  }
-
   /**
-   * Initialize sessions directory
-   */
-  private initializeSessionsDirectory(): void {
-    if (!fs.existsSync(SESSIONS_DIR)) {
-      fs.mkdirSync(SESSIONS_DIR, { recursive: true, mode: 0o700 });
-    }
-  }
-
-  /**
-   * Encrypt session data
-   */
-  private encrypt(data: string): string {
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv(
-      'aes-256-cbc',
-      crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32),
-      iv
-    );
-    let encrypted = cipher.update(data, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return iv.toString('hex') + ':' + encrypted;
-  }
-
-  /**
-   * Decrypt session data
-   */
-  private decrypt(encrypted: string): string {
-    const parts = encrypted.split(':');
-    const iv = Buffer.from(parts[0], 'hex');
-    const decipher = crypto.createDecipheriv(
-      'aes-256-cbc',
-      crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32),
-      iv
-    );
-    let decrypted = decipher.update(parts[1], 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted;
-  }
-
-  /**
-   * Save session to disk
+   * Save session
    */
   saveSession(session: TradeRepublicSession): void {
-    const sessionFile = path.join(SESSIONS_DIR, `${session.phone}.json.enc`);
-    const sessionData = JSON.stringify(session);
-    const encrypted = this.encrypt(sessionData);
-    fs.writeFileSync(sessionFile, encrypted, { mode: 0o600 });
-    this.sessions.set(session.phone, session);
+    sessions.set(session.phone, session);
   }
 
   /**
-   * Load session from disk
+   * Load session
    */
   loadSession(phone: string): TradeRepublicSession | null {
-    // Check memory first
-    if (this.sessions.has(phone)) {
-      const session = this.sessions.get(phone)!;
-      // Verify session is not expired
-      if (session.expiresAt > Date.now()) {
-        session.lastUsed = Date.now();
-        return session;
-      }
+    const session = sessions.get(phone);
+    
+    if (!session) {
+      return null;
     }
 
-    // Check disk
-    const sessionFile = path.join(SESSIONS_DIR, `${phone}.json.enc`);
-    if (fs.existsSync(sessionFile)) {
-      try {
-        const encrypted = fs.readFileSync(sessionFile, 'utf8');
-        const decrypted = this.decrypt(encrypted);
-        const session = JSON.parse(decrypted) as TradeRepublicSession;
-
-        // Verify session is not expired
-        if (session.expiresAt > Date.now()) {
-          session.lastUsed = Date.now();
-          this.sessions.set(phone, session);
-          return session;
-        }
-
-        // Session expired, delete it
-        fs.unlinkSync(sessionFile);
-      } catch (error) {
-        console.error(`[SessionManager] Failed to load session for ${phone}:`, error);
-      }
+    // Verify session is not expired
+    if (session.expiresAt > Date.now()) {
+      session.lastUsed = Date.now();
+      return session;
     }
 
+    // Session expired, delete it
+    sessions.delete(phone);
     return null;
-  }
-
-  /**
-   * Load all sessions
-   */
-  private loadSessions(): void {
-    try {
-      const files = fs.readdirSync(SESSIONS_DIR);
-      files.forEach((file) => {
-        const phone = file.replace('.json.enc', '');
-        this.loadSession(phone);
-      });
-    } catch (error) {
-      console.error('[SessionManager] Failed to load sessions:', error);
-    }
   }
 
   /**
    * Delete session
    */
   deleteSession(phone: string): void {
-    const sessionFile = path.join(SESSIONS_DIR, `${phone}.json.enc`);
-    if (fs.existsSync(sessionFile)) {
-      fs.unlinkSync(sessionFile);
-    }
-    this.sessions.delete(phone);
+    sessions.delete(phone);
   }
 
   /**
@@ -154,7 +64,7 @@ class SessionManager {
    */
   getValidSessions(): TradeRepublicSession[] {
     const now = Date.now();
-    return Array.from(this.sessions.values()).filter(
+    return Array.from(sessions.values()).filter(
       (session) => session.expiresAt > now
     );
   }
@@ -164,10 +74,10 @@ class SessionManager {
    */
   clearExpiredSessions(): void {
     const now = Date.now();
-    Array.from(this.sessions.keys()).forEach((phone) => {
-      const session = this.sessions.get(phone)!;
+    Array.from(sessions.keys()).forEach((phone) => {
+      const session = sessions.get(phone)!;
       if (session.expiresAt <= now) {
-        this.deleteSession(phone);
+        sessions.delete(phone);
       }
     });
   }
@@ -176,7 +86,7 @@ class SessionManager {
    * Update session token
    */
   updateSessionToken(phone: string, accessToken: string, refreshToken?: string): void {
-    const session = this.sessions.get(phone);
+    const session = sessions.get(phone);
     if (!session) {
       throw new Error(`Session not found for phone: ${phone}`);
     }
@@ -207,6 +117,13 @@ class SessionManager {
 
     this.saveSession(session);
     return session;
+  }
+
+  /**
+   * Check if session exists
+   */
+  hasSession(phone: string): boolean {
+    return sessions.has(phone);
   }
 }
 

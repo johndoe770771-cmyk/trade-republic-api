@@ -4,12 +4,9 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { BarChart3, LogOut } from 'lucide-react';
-import { useState } from 'react';
-
 export function DashboardNav() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('tradeSession');
