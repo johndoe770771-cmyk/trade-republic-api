@@ -23,3 +23,16 @@ export {
 
 // Export utilities
 export { cn } from './utils';
+
+// Export Binance service
+export {
+  getMarketSnapshot,
+  formatPrice,
+  formatTimestamp,
+} from './binance-service';
+
+export type {
+  MarketSnapshot,
+  MarketPair,
+  BinancePrice,
+} from './binance-service';
