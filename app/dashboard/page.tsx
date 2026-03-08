@@ -62,7 +62,7 @@ export default function DashboardPage() {
               </p>
             </div>
             <div className="grid lg:grid-cols-2 gap-6">
-              <BinanceMarket autoRefresh={true} refreshInterval={10000} />
+              <BinanceMarket autoRefresh={true} refreshInterval={20000} />
               
               <div className="space-y-6">
                 <div className="p-6 rounded-lg border border-border bg-card">
@@ -92,7 +92,7 @@ export default function DashboardPage() {
                   <ul className="space-y-2 text-sm text-muted-foreground">
                     <li>- XAU/EUR et XAG/EUR calcules a partir des prix USD</li>
                     <li>- XAG estime via le ratio or/argent (~80:1)</li>
-                    <li>- Rafraichissement automatique toutes les 10s</li>
+                    <li>- Rafraichissement automatique toutes les 20s</li>
                   </ul>
                 </div>
               </div>
@@ -108,7 +108,7 @@ export default function DashboardPage() {
 
             <TabsContent value="binance" className="space-y-6">
               <div className="grid lg:grid-cols-2 gap-6">
-                <BinanceMarket autoRefresh={true} refreshInterval={10000} />
+                <BinanceMarket autoRefresh={true} refreshInterval={20000} />
                 
                 <div className="space-y-6">
                   <div className="p-6 rounded-lg border border-border bg-card">
@@ -132,7 +132,7 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Auto Refresh</span>
-                        <span className="font-medium">Every 10 seconds</span>
+                        <span className="font-medium">Every 20 seconds</span>
                       </div>
                     </div>
                   </div>
@@ -142,7 +142,7 @@ export default function DashboardPage() {
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li>- XAU/EUR et XAG/EUR calcules a partir des prix USD</li>
                       <li>- XAG estime via le ratio or/argent (~80:1)</li>
-                      <li>- Rafraichissement automatique toutes les 10s</li>
+                      <li>- Rafraichissement automatique toutes les 20s</li>
                       <li>- Source: Binance Public API</li>
                     </ul>
                   </div>

@@ -67,8 +67,6 @@ export function AuthForm() {
         return;
       }
 
-      console.log('[v0] Sending SMS request for:', phoneNumber);
-
       const response = await fetch('/api/auth/sms', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -76,7 +74,6 @@ export function AuthForm() {
       });
 
       const data = await response.json();
-      console.log('[v0] SMS API response:', data);
 
       if (!response.ok || !data.success) {
         setError(data.error || 'Erreur lors de l\'envoi du SMS');
@@ -84,15 +81,9 @@ export function AuthForm() {
         return;
       }
 
-      // If in development, show the debug code
-      if (data.debugCode) {
-        console.log('[v0] Debug verification code:', data.debugCode);
-      }
-      
       setSmsSent(true);
       setStep('pin');
-    } catch (err) {
-      console.error('[v0] SMS send error:', err);
+    } catch {
       setError('Erreur de connexion. Verifiez votre connexion internet.');
     } finally {
       setIsLoading(false);
@@ -111,8 +102,6 @@ export function AuthForm() {
         return;
       }
 
-      console.log('[v0] Verifying PIN for:', phoneNumber);
-
       // First verify the SMS code
       const verifyResponse = await fetch('/api/auth/sms', {
         method: 'PUT',
@@ -121,7 +110,6 @@ export function AuthForm() {
       });
 
       const verifyData = await verifyResponse.json();
-      console.log('[v0] Verify response:', verifyData);
 
       if (!verifyResponse.ok || !verifyData.success) {
         setError(verifyData.error || 'Code de verification invalide');
@@ -141,7 +129,6 @@ export function AuthForm() {
       });
 
       const sessionData = await sessionResponse.json();
-      console.log('[v0] Session response:', sessionData);
 
       if (!sessionResponse.ok) {
         setError(sessionData.error || 'Erreur lors de la creation de session');
@@ -156,8 +143,7 @@ export function AuthForm() {
       }));
 
       router.push('/dashboard');
-    } catch (err) {
-      console.error('[v0] Authentication error:', err);
+    } catch {
       setError('Erreur de connexion. Verifiez votre connexion internet.');
     } finally {
       setIsLoading(false);

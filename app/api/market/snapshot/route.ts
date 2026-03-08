@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getMarketSnapshot } from '@/lib/binance-service';
 
+// Force dynamic rendering - no caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 /**
  * GET /api/market/snapshot
  * Returns current market prices from Binance (XAU, XAG, EUR pairs)
@@ -20,7 +24,7 @@ export async function GET() {
       },
       {
         headers: {
-          'Cache-Control': 'public, s-maxage=5, stale-while-revalidate=10',
+          'Cache-Control': 'no-store, no-cache, must-revalidate',
           'Content-Type': 'application/json',
         },
       }

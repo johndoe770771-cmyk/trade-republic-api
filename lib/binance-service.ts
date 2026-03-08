@@ -44,7 +44,7 @@ const SYMBOL_MAP = {
 async function fetchBinancePrice(symbol: string): Promise<number | null> {
   try {
     const response = await fetch(`${BINANCE_API_BASE}/ticker/price?symbol=${symbol}`, {
-      next: { revalidate: 5 }, // Cache for 5 seconds
+      cache: 'no-store', // Always fetch fresh data
     });
 
     if (!response.ok) {
@@ -70,7 +70,7 @@ async function fetchBinancePrices(symbols: string[]): Promise<Map<string, number
     // Use the ticker endpoint for multiple symbols
     const symbolsParam = JSON.stringify(symbols);
     const response = await fetch(`${BINANCE_API_BASE}/ticker/price?symbols=${encodeURIComponent(symbolsParam)}`, {
-      next: { revalidate: 5 },
+      cache: 'no-store', // Always fetch fresh data
     });
 
     if (!response.ok) {
