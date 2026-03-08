@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { BarChart3, LogOut, Settings, Menu } from 'lucide-react';
+import { BarChart3, LogOut, Settings, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 
 export function DashboardNav() {
@@ -18,6 +18,7 @@ export function DashboardNav() {
 
   const navItems = [
     { href: '/dashboard', label: 'Portfolio', icon: BarChart3 },
+    { href: '/dashboard/market', label: 'Market', icon: TrendingUp },
   ];
 
   return (

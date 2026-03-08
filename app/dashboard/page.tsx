@@ -8,6 +8,7 @@ import { PositionsTable } from '@/components/positions-table';
 import { PerformanceChart } from '@/components/performance-chart';
 import { AllocationChart } from '@/components/allocation-chart';
 import { Watchlist } from '@/components/watchlist';
+import { MarketSnapshot } from '@/components/market-snapshot';
 import { createMockPortfolioData } from '@/lib/trade-republic';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -51,11 +52,12 @@ export default function DashboardPage() {
         {/* Portfolio Header */}
         <PortfolioHeader data={portfolioData} />
 
-        {/* Charts and Watchlist Section */}
+        {/* Charts, Market Data and Watchlist Section */}
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <PerformanceChart />
             <AllocationChart />
+            <MarketSnapshot />
           </div>
           <Watchlist />
         </div>
