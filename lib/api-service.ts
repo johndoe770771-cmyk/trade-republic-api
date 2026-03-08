@@ -1,8 +1,32 @@
 // Trade Republic API Service Integration
 // This service demonstrates how to integrate the Trade Republic API with your dashboard
 
-import type { TradeRepublicApi } from '../trade-republic-api/src/api';
-import type { Portfolio, Position } from '../trade-republic-api/src/portfolio';
+// Local type definitions (since the external trade-republic-api package is not available)
+export interface TradeRepublicApi {
+  login: () => Promise<boolean>;
+  getPortfolio: () => Promise<Portfolio>;
+  subscribe: (message: object, callback: (data: string) => void) => string;
+  unsubscribe: (id: string) => void;
+  placeOrder: (order: { isin: string; quantity: number; type: 'BUY' | 'SELL' }) => Promise<{ orderId: string }>;
+  disconnect?: () => Promise<void>;
+}
+
+export interface Position {
+  isin: string;
+  name: string;
+  quantity: number;
+  averageBuyPrice: number;
+  currentPrice: number;
+  totalValue: number;
+  profitLoss: number;
+  profitLossPercent: number;
+}
+
+export interface Portfolio {
+  totalValue: number;
+  cashBalance: number;
+  positions: Position[];
+}
 
 /**
  * Initialize Trade Republic API
