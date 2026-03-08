@@ -16,9 +16,11 @@ export function AuthForm() {
   const [existingSession, setExistingSession] = useState<{ phone: string; lastUsed: string } | null>(null);
   const [step, setStep] = useState<'phone' | 'pin'>('phone');
   const [smsSent, setSmsSent] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Load existing session on mount
+  // Mark component as mounted to avoid hydration mismatch
   useEffect(() => {
+    setIsMounted(true);
     loadExistingSession();
   }, []);
 
@@ -31,9 +33,13 @@ export function AuthForm() {
         const storedPhone = session.phoneNumber;
         
         setPhoneNumber(storedPhone);
+        // Use ISO date format to avoid locale-dependent hydration mismatch
+        const date = new Date(session.timestamp);
+        const formattedDate = `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        
         setExistingSession({
           phone: storedPhone,
-          lastUsed: new Date(session.timestamp).toLocaleDateString(),
+          lastUsed: formattedDate,
         });
 
         // Check backend for persistent session using stored phone
@@ -256,7 +262,7 @@ export function AuthForm() {
             </form>
           )}
 
-          {existingSession && step === 'phone' && (
+          {isMounted && existingSession && step === 'phone' && (
             <div className="pt-4 border-t border-border space-y-3">
               <div className="flex items-center gap-2 p-3 rounded-lg bg-primary/5 border border-primary/20">
                 <CheckCircle className="w-5 h-5 text-primary flex-shrink-0" />
